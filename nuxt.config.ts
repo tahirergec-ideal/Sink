@@ -12,11 +12,15 @@ export default defineNuxtConfig({
     '@vueuse/motion/nuxt',
     'shadcn-nuxt',
   ],
+
   devtools: { enabled: true },
+
   css: ['~/assets/css/tailwind.css'],
+
   colorMode: {
     classSuffix: '',
   },
+
   runtimeConfig: {
     siteToken: process.env.NUXT_SITE_TOKEN || crypto.randomUUID(),
     redirectStatusCode: '301',
@@ -27,7 +31,7 @@ export default defineNuxtConfig({
     cfApiToken: '',
     dataset: 'sink',
     aiModel: '@cf/meta/llama-3.1-8b-instruct',
-    aiPrompt: `You are a URL shortening assistant, please shorten the URL provided by the user into a SLUG. The SLUG information must come from the URL itself, do not make any assumptions. A SLUG is human-readable and should not exceed three words and can be validated using regular expressions {slugRegex} . Only the best one is returned, the format must be JSON reference {"slug": "example-slug"}`,
+    aiPrompt: `You are a URL shortening assistant, please shorten the URL provided by the user into a SLUG. The SLUG information must come from the URL itself, do not make any assumptions. A SLUG is human-readable and should not exceed three words and can be validated using regular expressions {slugRegex}. Only the best one is returned, the format must be JSON reference {"slug": "example-slug"}`,
     caseSensitive: false,
     listQueryLimit: 500,
     disableBotAccessLog: false,
@@ -36,27 +40,22 @@ export default defineNuxtConfig({
       slugDefaultLength: '6',
     },
   },
+
   routeRules: {
-    '/': {
-      prerender: true,
-    },
-    '/dashboard/**': {
-      prerender: true,
-      ssr: false,
-    },
-    '/dashboard': {
-      redirect: '/dashboard/links',
-    },
-    '/api/**': {
-      cors: process.env.NUXT_API_CORS === 'true',
-    },
+    '/': { prerender: false },
+    '/dashboard/**': { ssr: false },
   },
+
   experimental: {
     enforceModuleCompatibility: true,
   },
+
   compatibilityDate: 'latest',
+
+  // ✅ Cloudflare Workers için optimize edilmiş Nitro yapılandırması
   nitro: {
-    preset: import.meta.env.DEV ? 'cloudflare-module' : undefined,
+    preset: 'cloudflare_module', // 👈 "cloudflare-module" yerine bu olmalı!
+
     experimental: {
       openAPI: true,
     },
@@ -65,7 +64,8 @@ export default defineNuxtConfig({
       production: 'runtime',
       meta: {
         title: 'Sink API',
-        description: 'A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.',
+        description:
+          'A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.',
       },
       route: '/_docs/openapi.json',
       ui: {
@@ -78,6 +78,7 @@ export default defineNuxtConfig({
       },
     },
   },
+
   hub: {
     ai: true,
     analytics: true,
@@ -87,17 +88,18 @@ export default defineNuxtConfig({
     kv: true,
     workers: provider !== 'cloudflare_pages',
   },
+
   vite: {
-    plugins: [
-      tailwindcss(),
-    ],
+    plugins: [tailwindcss()],
   },
+
   eslint: {
     config: {
       stylistic: true,
       standalone: false,
     },
   },
+
   i18n: {
     locales: currentLocales,
     compilation: {
@@ -113,15 +115,9 @@ export default defineNuxtConfig({
     baseUrl: '/',
     defaultLocale: 'en-US',
   },
+
   shadcn: {
-    /**
-     * Prefix for all the imported component
-     */
     prefix: '',
-    /**
-     * Directory that the component lives in.
-     * @default "./components/ui"
-     */
     componentDir: './app/components/ui',
   },
 })
